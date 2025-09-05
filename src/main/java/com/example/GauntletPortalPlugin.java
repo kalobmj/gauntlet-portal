@@ -22,13 +22,19 @@ public class GauntletPortalPlugin extends Plugin
 {
 
 	// gauntlet portal object id
-	int gauntletId = 36086;
+	int gauntletId = 37340;
 
 	@Inject
 	private Client client;
 
 	@Inject
 	private GauntletPortalConfig config;
+
+    // keep track of portal object
+    private final GameObject portal;
+
+
+    //future keep track of <set> of game objects
 
 	GauntletPortalConfig getConfig() { return config; }
 
@@ -49,13 +55,21 @@ public class GauntletPortalPlugin extends Plugin
 	{
 		GameObject portal = e.getGameObject();
 
+        log.info("logging random object: {}", portal);
+        log.info("logging random object id: {}", portal.getId());
+
+        // we want to track portal
+        // we want to go back, get multiple objects like the chest to color the hull
+        // set default chest colors , user can change
+
 		// if object id matches portal id
 		if (portal.getId() == gauntletId) {
-			log.info("gauntlet portal spawned with ID: {}", portal.getId());
+			log.info("gauntlet PORTAL spawned with ID: {}", portal.getId());
+            log.info("logging PORTAL object: {}", portal);
 		}
 
 		// testing calling each object spawned and getting its id
-		log.info("object spawned with id: ", portal.getId() );
+		log.info("obj spawned: {}", portal);
 
 	}
 

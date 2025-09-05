@@ -47,7 +47,7 @@ public class GauntletPortalOverlay extends Overlay
     public Dimension render(Graphics2D g)
     {
         // gauntlet portal object id
-        int gauntletId = 36086;
+        int gauntletId = 37340;
 
         GauntletPortalConfig c = plugin.getConfig();
         ObjectComposition GauntletPortalObject = client.getObjectDefinition(gauntletId);
@@ -58,9 +58,6 @@ public class GauntletPortalOverlay extends Overlay
         // outline width
         BasicStroke stroke = new BasicStroke(c.strokeWidth());
         g.setStroke(stroke);
-
-//        Shape hull = GauntletPortalObject.
-//        client.get
 
         return null;
 
