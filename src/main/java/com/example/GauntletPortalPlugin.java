@@ -1,5 +1,6 @@
 package com.example;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,9 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
+
+import java.util.Set;
 
 @Slf4j
 @PluginDescriptor(
@@ -20,21 +24,21 @@ import net.runelite.client.plugins.PluginDescriptor;
 )
 public class GauntletPortalPlugin extends Plugin
 {
+	@Inject private Client client;
+	@Inject private OverlayManager overlayManager;
+	@Inject private GauntletPortalOverlay overlay;
+	@Inject private GauntletPortalConfig config;
 
-	// gauntlet portal object id
-	int gauntletId = 37340;
+	// Set of gauntlet objects to outline
+	private final Set<GameObject> gauntletObjects = Sets.newConcurrentHashSet();
 
-	@Inject
-	private Client client;
+	@Provides
+	GauntletPortalConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(GauntletPortalConfig.class);
+	}
 
-	@Inject
-	private GauntletPortalConfig config;
-
-    // keep track of portal object
-    private final GameObject portal;
-
-
-    //future keep track of <set> of game objects
+	Set<GameObject> getGauntletObjects() { return gauntletObjects; }
 
 	GauntletPortalConfig getConfig() { return config; }
 
@@ -42,17 +46,36 @@ public class GauntletPortalPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		log.info("Gauntlet Portal started!");
+		overlayManager.add(overlay);
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
 		log.info("Gauntlet Portal stopped!");
+		overlayManager.remove(overlay);
+		gauntletObjects.clear();
 	}
 
 	@Subscribe
 	public void onGameObjectSpawned(GameObjectSpawned e)
 	{
+
+		// gauntlet portal object id
+		int gauntletId = 37340;
+
+		// gauntlet exit portal id
+		int exitPortalId = 123;
+
+		// gauntlet chest id
+		int chestId = 1234;
+
+		// code below will be:
+		// if (
+		// gauntletObject includes any of our ids,
+		// add them to gauntletObjects (so we can loop over and color in overlay)
+		// )
+
 		GameObject portal = e.getGameObject();
 
         log.info("logging random object: {}", portal);
@@ -80,11 +103,5 @@ public class GauntletPortalPlugin extends Plugin
 		{
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says ", null);
 		}
-	}
-
-	@Provides
-    GauntletPortalConfig provideConfig(ConfigManager configManager)
-	{
-		return configManager.getConfig(GauntletPortalConfig.class);
 	}
 }
