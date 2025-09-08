@@ -14,7 +14,6 @@ import net.runelite.client.ui.overlay.*;
 @Slf4j
 public class GauntletPortalOverlay extends Overlay
 {
-
     private final Client client;
     private final GauntletPortalConfig config;
     private final GauntletPortalPlugin plugin;
@@ -60,6 +59,8 @@ public class GauntletPortalOverlay extends Overlay
                 continue;
 
             Shape hull = obj.getConvexHull();
+
+            // logic for filling in will go here
 
             // Outline
             g.setColor(c.outlineColor());

@@ -9,6 +9,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -64,20 +65,21 @@ public class GauntletPortalPlugin extends Plugin
 	public void onGameObjectSpawned(GameObjectSpawned e)
 	{
 		GameObject obj = e.getGameObject();
-
-		int id = obj.getId();
-
-		if (gauntletIds.contains(id)) {
+		if (gauntletIds.contains(obj.getId())) {
 			gauntletObjects.add(obj);
 		}
 	}
 
 	@Subscribe
+	public void onGameObjectDespawned(GameObjectDespawned e) { gauntletObjects.remove(e.getGameObject()); }
+
+	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
+		if (gameStateChanged.getGameState() == GameState.LOADING)
 		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says ", null);
+			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Gauntlet Portal says: LOADING ", null);
+			gauntletObjects.clear();
 		}
 	}
 }
